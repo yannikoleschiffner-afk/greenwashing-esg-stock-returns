@@ -1,4 +1,4 @@
-# Talk vs. Walk: Greenwashing, ESG Ratings and Stock Returns
+# Greenwashing, ESG Ratings and Stock Returns
 
 Group project for *BMF5324 AI and Statistics for Financial Decision-Making* at the National University of Singapore (Oct 2026).
 Team: Arya Garg, Peter Lesmana, Huiyi Zhang, Yannik Schiffner.
