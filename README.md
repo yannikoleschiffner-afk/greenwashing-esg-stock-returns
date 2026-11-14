@@ -19,7 +19,7 @@ Both are ranked against sector peers in the same year. If investors eventually s
 1. **No reliable return penalty.** The top GWI quintile earns 0.9 pp a year less than the bottom quintile, but p = 0.35, and the gap *shrinks* after Paris instead of growing. The data rule out a penalty larger than about 2.8 pp a year.
 2. **The ESG rating is the problem.** LSEG's Environmental Pillar score rewards disclosure and green talk, not lower emissions, so a screen built on it misses most of the firms our index flags. This is the strongest result and the basis of the memo's recommendation.
 
-![Talk vs Walk](figures/figure1_talk_vs_walk.png)
+![Green talk against actual emissions](figures/figure1_talk_vs_walk.png)
 
 ## Repository layout
 
