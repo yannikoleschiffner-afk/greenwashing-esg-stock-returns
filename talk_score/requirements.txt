@@ -1,0 +1,12 @@
+pandas>=2.0
+numpy>=1.24
+requests>=2.28
+beautifulsoup4>=4.12
+lxml>=4.9
+rapidfuzz>=3.0
+tqdm>=4.65
+# FinBERT scoring only (preinstalled on Colab)
+transformers>=4.36
+torch>=2.0
+# tests
+pytest>=7.0

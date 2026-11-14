@@ -1,0 +1,59 @@
+column,description,unit,source
+firm_id,Firm identifier (ticker used in the project),,project
+ticker,Stock ticker,,S&P 500 membership list
+name,"Company name (the latest name for the ticker, not necessarily the name in year t; e.g. CBS 2010-18 shows Paramount)",,"S&P 500 membership list, LSEG"
+cik,SEC company identifier (CIK),,SEC EDGAR
+entity,Company ID used for clustering standard errors ('c:' + the company's current SEC CIK). Links share classes and a company's old and new CIKs after reorganisations (e.g. GOOGL 2010-14 and GOOG are both c:1652044). 651 companies in the regression sample,,project
+year,Fiscal year of the 10-K (year t). Year-ends in January or 1-7 February count as the previous year,year,SEC EDGAR
+return_year,Year of the return (t+1),year,project
+fye,Fiscal year-end date of the 10-K,date,SEC EDGAR
+filing_date,Date the 10-K was filed,date,SEC EDGAR
+trbc,LSEG TRBC economic sector code (the sector used for ranking and fixed effects),code,LSEG
+trbc_name,TRBC economic sector name,,LSEG
+trbc_business,LSEG TRBC business sector code (4 digits; the first two digits are the economic sector). Used for the 22-sector split,code,LSEG
+trbc_business_name,TRBC business sector name,,LSEG
+excluded,True = removed from the analysis (53 rows); the reason is in excluded_reason,True/False,project audit
+excluded_reason,"duplicate listing (47: second share class or old ticker of a firm already in the panel: DISCK, FOXA, GOOGL, NWSA, UAA, KORS, GOOG 2014) or wrong-company 10-K (6: FRC 2019-22, FTI 2016 pre-merger shell, Q 2010)",,project audit
+notes,"Semicolon-separated cleaning flags: excluded:<ticker year> (see excluded_reason); revenue_asfiled_10K = revenue taken from the as-filed 10-K; lseg_price_only_use_yahoo_total = total return from Yahoo (ret_source yahoo_divfix); return_sources_disagree = LSEG and Yahoo differ by >20 pp, return blanked; return_corporate_event_error = return blanked (corporate-event data error); talk_year_wrong = 10-K belongs to another fiscal year, Talk blanked; tmus_reverse_merger_revenue = TMUS 2011-12 LSEG revenue is T-Mobile USA's, blanked; spinoff_numerator_mismatch = YUM 2016 pre-spin-off emissions, blanked",,project audit
+remapped,"True = the 10-K CIK pointed at a subsidiary or an old LSEG entity, so the firm-year was re-linked to the right LSEG record (data audit, memo 4.1)",True/False,project audit
+in_gwi_sample,"True = has Talk, reported emissions and a GWI (5,635 firm-years)",True/False,project
+in_regression_sample,"True = in the main regression: GWI, next-year return and all controls (5,600 firm-years)",True/False,project
+fb_talk_raw,"Talk input 1: share of 10-K sentences (Items 1, 1A, 7) that FinBERT classifies as environmental and positive",share 0-1,"10-K text, FinBERT"
+lm_talk_raw,Talk input 2: the same share using Loughran-McDonald word lists,share 0-1,"10-K text, Loughran-McDonald"
+talk,"Talk percentile: both inputs ranked 0-100 within sector-year, averaged, ranked again (GWI sample only)",0-100,project
+scope12_reported,Scope 1+2 emissions as delivered by LSEG (reported by the firm),t CO2e,LSEG Refinitiv ESG
+s12,"Scope 1+2 emissions used, after cleaning (data errors blanked)",t CO2e,LSEG + project audit
+rev_final,"Revenue used for carbon intensity (LSEG, or the as-filed 10-K figure where LSEG was wrong)",US$ m,LSEG / SEC 10-K
+rev_lseg,"Revenue exactly as delivered by LSEG, before the as-filed 10-K fix (robustness check in notebook section 7)",US$ m,LSEG
+ci,Carbon intensity = s12 / rev_final (non-excluded rows only),t CO2e per US$ m revenue,project
+carbon_pct,"Carbon intensity percentile within sector-year (100 = dirtiest), GWI sample only",0-100,project
+walk,Walk percentile = 100 - carbon_pct (100 = cleanest in its sector-year),0-100,project
+gwi_raw,Talk minus Walk,rank points (-100 to +100),project
+gwi,"Greenwashing index = gwi_raw standardised over the 5,635 GWI firm-years (1 unit = 45.2 rank points)",GWI units (SD),project
+ret_cy,Total return incl. dividends over calendar year t+1 (delisted firms: up to the delisting date). Not winsorised,decimal (0.10 = 10%),"LSEG TR.TotalReturn; Yahoo Finance for 75 rows (ret_source yahoo or yahoo_divfix), 57 of them in the regression sample"
+ret_source,"Where ret_cy comes from: lseg = LSEG total return; yahoo_divfix = LSEG only had a price return, so the Yahoo total return incl. dividends is used; yahoo = no LSEG return, Yahoo total return used; blank = no return available",,project
+ret_cy_yahoo,"Yahoo Finance total return over calendar year t+1, for firms Yahoo still covers (robustness check in notebook section 7). Not winsorised",decimal (0.10 = 10%),Yahoo Finance
+ret_aprmar,Total return April t+1 to March t+2 (robustness check),decimal (0.10 = 10%),LSEG (Yahoo where LSEG is missing)
+ret_t2_lseg,LSEG total return over calendar year t+2 (second year after the 10-K); used for the two-year return in notebook section 5,decimal (0.10 = 10%),LSEG
+mv,Market value at the end of year t,US$ m,LSEG TR.CompanyMarketCap (Yahoo/SEC where LSEG was wrong)
+size_mv,Size control = ln(mv),log US$ m,project
+total_assets,Total assets from the 10-K,US$,SEC XBRL
+size_assets,ln(total assets in US$ m) (robustness and ESG-rating checks),log US$ m,project
+net_income,Net income from the 10-K,US$,SEC XBRL
+total_liabilities,Total liabilities from the 10-K,US$,SEC XBRL
+roa,ROA control = net income / total assets,fraction,SEC XBRL
+lev,Leverage control = total liabilities / total assets,fraction,SEC XBRL
+bm,Book-to-market (robustness control),ratio,SEC XBRL / LSEG
+mom,Return over year t (robustness control),decimal (0.10 = 10%),LSEG (Yahoo where LSEG is missing)
+post,PostParis = 1 for 10-K years 2016 and later,0/1,project
+ep,LSEG Environmental Pillar score,0-100,LSEG Refinitiv ESG
+talk_epm,"Identical to talk (Talk is already ranked on the 5,635 GWI firm-years); kept under this name for the ESG-rating comparison",0-100,project
+walk_epm,Environmental Pillar percentile within sector-year on the GWI sample (rating-based Walk),0-100,project
+gwi_epm,"GWI with walk_epm as Walk, same 5,635 firm-years",GWI units,project
+gwi_ep,"GWI with the Environmental Pillar as Walk, all non-excluded firm-years with Talk and a pillar score (7,050; robustness, Table 3)",GWI units,project
+gwi_est,GWI where Walk also uses LSEG estimated emissions for non-reporters (robustness),GWI units,project
+gwi_ff12,GWI with Talk and Walk ranked within Fama-French 12 industries (robustness),GWI units,project
+gwi_fb,GWI with Talk from FinBERT only (robustness),GWI units,project
+gwi_lm,GWI with Talk from Loughran-McDonald only (robustness),GWI units,project
+car_0_2,"Abnormal return over the 10-K filing day and the next two trading days (stock minus S&P 500 total return), GWI sample only",% points,Yahoo Finance / LSEG daily prices
+car_0_2_w,"car_0_2 winsorised 1%/99% over the 5,635 GWI filings (used in the 10-K reaction test)",% points,project
